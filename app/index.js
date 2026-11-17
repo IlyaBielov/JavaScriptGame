@@ -23,6 +23,11 @@ $gameTime.addEventListener('input', setGameTime);
 
 function startGame() {
   score = 0;
+  // An empty, zero or negative time ended the game at once: fall back to the minimum
+  var minTime = +$gameTime.min || 5;
+  if (!(+$gameTime.value >= minTime)) {
+    $gameTime.value = minTime;
+  }
   setGameTime();
   $gameTime.setAttribute('disabled', 'true');
 
@@ -82,9 +87,9 @@ function renderBox() {
   $game.innerHTML = '';
   var box = document.createElement('div');
   var boxSize = getRandom(30, 100);
-  var gameSize = $game.getBoundingClientRect();
-  var maxTop = gameSize.height - boxSize;
-  var maxLeft =  gameSize.width - boxSize;
+  // clientWidth/Height exclude the border, so the box never sticks out of the field
+  var maxTop = $game.clientHeight - boxSize;
+  var maxLeft = $game.clientWidth - boxSize;
   var colors = ['#FF6247', '#1E90FF', '#3CB371', '#EE82EE', '#6A5ACD']
   
   box.style.height = box.style.width = boxSize + 'px';
